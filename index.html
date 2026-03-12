@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Detained Engineer | Links</title>
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+
+body{
+font-family: Arial, sans-serif;
+background: linear-gradient(135deg,#0f0f0f,#2a2a2a);
+margin:0;
+padding:0;
+color:white;
+text-align:center;
+}
+
+.container{
+max-width:420px;
+margin:auto;
+padding:40px 20px;
+}
+
+/* Profile section */
+
+.profile-wrapper{
+position:relative;
+display:inline-block;
+}
+
+.profile-img{
+width:120px;
+height:120px;
+border-radius:50%;
+object-fit:cover;
+border:4px solid white;
+}
+
+/* Music button */
+
+.music-btn{
+position:absolute;
+bottom:5px;
+right:5px;
+width:36px;
+height:36px;
+border-radius:50%;
+border:none;
+background:rgba(0,0,0,0.55);
+color:white;
+cursor:pointer;
+display:flex;
+align-items:center;
+justify-content:center;
+backdrop-filter:blur(4px);
+transition:0.2s;
+}
+
+.music-btn:hover{
+background:rgba(0,0,0,0.8);
+}
+
+.music-btn i{
+font-size:14px;
+}
+
+h1{
+margin:15px 0 2px;
+}
+
+.bio{
+margin-top:5px;
+}
+
+.links a{
+display:flex;
+align-items:center;
+justify-content:center;
+gap:10px;
+text-decoration:none;
+background:white;
+color:#222;
+padding:15px;
+margin:12px 0;
+border-radius:12px;
+font-weight:bold;
+transition:0.25s;
+}
+
+.links a i{
+font-size:18px;
+}
+
+/* Platform hover colors */
+
+.links a.spotify{
+color:#1DB954;
+background-color:white;
+}
+
+.links a.apple{
+color:#000000;
+background:white;
+}
+
+.links a.ytmusic{
+color:#ff4e4e;
+background:white;
+}
+
+.links a.amazon{
+color:#00A8E1;
+background:white;
+}
+
+.links a.instagram{
+color:#E1306C;
+background:white;
+}
+
+.links a.youtube{
+color:#f25353;
+background:white;
+}
+
+.footer{
+margin-top:30px;
+font-size:12px;
+opacity:0.6;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- Background Music -->
+<audio id="bgmusic" autoplay loop>
+<source src="intro.mp3" type="audio/mpeg">
+</audio>
+
+<div class="container">
+
+<div class="profile-wrapper">
+<img src="profile.jpeg" class="profile-img">
+
+<button id="musicToggle" class="music-btn">
+<i class="fas fa-pause"></i>
+</button>
+</div>
+
+<h1>Detained Engineer</h1>
+
+<p class="bio">Artist</p>
+<p style="margin-top: 0%;">Tum Hi Ho Out Now !</p>
+
+<div class="links">
+
+<a class="spotify" href="https://open.spotify.com/track/6VZcSZPMuAIAXH6kcqgGDh?si=0a728bbd5b004e47">
+<i class="fab fa-spotify"></i> Spotify
+</a>
+
+<a class="apple" href="https://music.apple.com/us/song/tum-hi-ho/1880040349">
+<i class="fab fa-apple"></i> Apple Music
+</a>
+
+<a class="ytmusic" href="https://music.youtube.com/playlist?list=OLAK5uy_lTAWjlc1TMwsuyTktdCKY9cCFbinP8w3Q&si=Ok4tTaAJDHbWRaCp">
+<i class="fas fa-music"></i> YouTube Music
+</a>
+
+<a class="amazon" href="https://music.amazon.in/albums/B0GPLM3B46?ref=dm_sh_am4a_B0GPM1VGKG_FTpGu1dNaCF914&trackAsin=B0GPL92SDC">
+<i class="fa-brands fa-amazon"></i> Amazon Music
+</a>
+
+<a class="instagram" href="https://www.instagram.com/detained_engineer_/">
+<i class="fab fa-instagram"></i> Instagram
+</a>
+
+<a class="youtube" href="#">
+<i class="fab fa-youtube"></i> YouTube
+</a>
+
+</div>
+
+<div class="footer">
+© 2026 Detained Engineer
+</div>
+
+</div>
+
+<script>
+
+const music = document.getElementById("bgmusic");
+const toggleBtn = document.getElementById("musicToggle");
+const icon = toggleBtn.querySelector("i");
+
+/* Autoplay with volume */
+window.addEventListener("load", () => {
+music.volume = 0.5;
+music.play().catch(()=>{});
+});
+
+/* Play / Pause toggle */
+
+toggleBtn.addEventListener("click", () => {
+
+if(music.paused){
+music.play();
+icon.className = "fas fa-pause";
+}else{
+music.pause();
+icon.className = "fas fa-play";
+}
+
+});
+
+</script>
+
+</body>
+</html>
