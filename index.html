@@ -273,14 +273,19 @@
   <div class="social-links">
     <div class="follow">Follow on:</div>
     <div class="social-bar">
-      <a href="https://www.instagram.com/detained_engineer_/" target="_blank" rel="noopener" aria-label="Instagram">
+      <a
+        id="instagramProfileLink"
+        href="https://www.instagram.com/detained_engineer_/" target="_blank" rel="noopener" aria-label="Instagram">
         <i class="fab fa-instagram"></i>
       </a>
-      <a href="https://www.youtube.com/channel/UC9UQX1v_JLoy-ZwdDbUMDtQ" target="_blank" rel="noopener" aria-label="YouTube">
+      <a
+        id="youtubeProfileLink"
+        href="https://www.youtube.com/channel/UC9UQX1v_JLoy-ZwdDbUMDtQ" target="_blank" rel="noopener" aria-label="YouTube">
         <i class="fab fa-youtube"></i>
       </a>
-      <a id="spotifyProfileLink"
-   href="https://open.spotify.com/user/nu3lsoxgt11dh6f97k2plkyl3" target="_blank" rel="noopener" aria-label="Spotify">
+      <a 
+        id="spotifyProfileLink"
+         href="https://open.spotify.com/user/nu3lsoxgt11dh6f97k2plkyl3" target="_blank" rel="noopener" aria-label="Spotify">
         <i class="fab fa-spotify"></i>
       </a>
     </div>
@@ -577,50 +582,115 @@ music.addEventListener("ended", () => {
    META TRACKING
 ========================================== */
 
-function trackSpotifyClick(linkType) {
+const DEBUG = false;
 
-    console.log("Spotify Click Fired");
+const Tracking = {
 
-    fbq('trackCustom', 'SpotifyClick', {
-        song: tracks[currentIndex].title,
-        linkType: linkType
-    });
+    track(eventName, data = {}) {
 
-}
+        if (DEBUG) {
+            console.log("[META]", eventName, data);
+        }
 
-document
-.getElementById("spotifyLink")
-.addEventListener("click", function () {
+        if (typeof fbq === "function") {
+            fbq("trackCustom", eventName, data);
+        }
+    },
 
-    trackSpotifyClick("Song");
+    register(elementId, eventName, extraData = {}) {
 
-});
+        const element = document.getElementById(elementId);
 
-document
-.getElementById("spotifyProfileLink")
-.addEventListener("click", function () {
+        if (!element) {
+            console.warn(`Tracking: '${elementId}' not found.`);
+            return;
+        }
 
-    trackSpotifyClick("ArtistProfile");
+        element.addEventListener("click", () => {
 
-});
+            const data = {
+                song: tracks[currentIndex].title,
+                ...extraData
+            };
+
+            Tracking.track(eventName, data);
+
+        });
+
+    }
+
+};
 
 
+/* ---------- Register Events ---------- */
 
+Tracking.register(
+    "spotifyLink",
+    "SpotifyClick",
+    {
+        linkType: "Song"
+    }
+);
 
+Tracking.register(
+    "spotifyProfileLink",
+    "SpotifyClick",
+    {
+        linkType: "ArtistProfile"
+    }
+);
 
+Tracking.register(
+    "youtubeLink",
+    "YouTubeClick",
+    {
+        linkType: "Song"
+    }
+);
 
+Tracking.register(
+    "youtubeProfileLink",
+    "YouTubeClick",
+    {
+        linkType: "ArtistProfile"
+    }
+);
 
+Tracking.register(
+    "appleLink",
+    "AppleMusicClick",
+    {
+        linkType: "Song"
+    }
+);
 
+Tracking.register(
+    "ytmusicLink",
+    "YouTubeMusicClick",
+    {
+        linkType: "Song"
+    }
+);
 
+Tracking.register(
+    "amazonLink",
+    "AmazonMusicClick",
+    {
+        linkType: "Song"
+    }
+);
 
-
-
+Tracking.register(
+    "instagramProfileLink",
+    "InstagramClick",
+      {
+        linkType: "ArtistProfile"
+    }
+);
 
 /* ==========================================
    META TRACKING
 ========================================== */
-
-
 
   !function(f,b,e,v,n,t,s)
   {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
