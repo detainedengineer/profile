@@ -1,262 +1,600 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Detained Engineer | Profile</title>
 
-<title>Detained Engineer | Profile</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    body{
+      font-family: Arial, sans-serif;
+      margin:0;
+      padding:0;
+      color:white;
+      text-align:center;
+      overflow:hidden;
+      background:#000;
+    }
 
-<style>
+    .bg{
+      position:fixed;
+      top:0; left:0;
+      width:100%; height:100%;
+      background:center/cover no-repeat;
+      filter:blur(3px) brightness(0.4);
+      transform:scale(1.2);
+      z-index:-2;
+      transition:background-image .35s ease;
+    }
 
-body{
-font-family: Arial, sans-serif;
-margin:0;
-padding:0;
-color:white;
-text-align:center;
-overflow-x:hidden;
+    .overlay{
+      position:fixed;
+      top:0; left:0;
+      width:100%; height:100%;
+      background:rgba(0,0,0,0.55);
+      z-index:-1;
+    }
+
+    .container{
+      max-width:420px;
+      margin:auto;
+      padding:32px 20px 24px;
+      min-height:100vh;
+      box-sizing:border-box;
+      display:flex;
+      flex-direction:column;
+      justify-content:flex-start;
+      user-select:none;
+      -webkit-user-select:none;
+    }
+
+    /* Swipe animation states */
+    #swipeArea{
+      touch-action: pan-y;
+      will-change: transform;
+      transition: transform 0.28s ease;
+    }
+
+    #swipeArea.dragging{
+      transition: none;
+    }
+
+    #swipeArea.animating{
+      transition: transform 0.30s ease;
+    }
+
+    .profile-wrapper{
+      position:relative;
+      display:inline-block;
+      margin-bottom:8px;
+    }
+
+    .profile-img{
+      width:35vw;
+      max-width:150px;
+      /* aspect-ratio: 1 / 1; */
+      object-fit:cover;
+      border:2px solid white;
+      border-radius:8px;
+      transition:opacity .25s ease;
+    }
+
+    .music-btn{
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  width:50px;
+  height:50px;
+  border:none;
+  background:transparent;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:0;
+  font-size: 15px;
 }
 
-/* Blurred background */
-
-.bg{
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:url("profile.jpeg") center/cover no-repeat;
-filter:blur(3px) brightness(0.4);
-transform:scale(1.2);
-z-index:-2;
+.music-btn svg{
+  position:absolute;
+  width:50px;
+  height:50px;
+  transform:rotate(-90deg);
 }
 
-/* dark overlay */
-
-.overlay{
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:rgba(0,0,0,0.55);
-z-index:-1;
+.music-btn .track{
+  fill:none;
+  /* stroke:rgba(255,255,255,.25); */
+  stroke-width:3;
 }
 
-.container{
-max-width:420px;
-margin:auto;
-padding:40px 20px;
+.music-btn .progress{
+  fill:none;
+  stroke:#fff;
+  stroke-width:3;
+  stroke-linecap:round;
+  stroke-dasharray:163.36;
+  stroke-dashoffset:163.36;
+  transition:stroke-dashoffset .1s linear;
 }
 
-/* profile */
-
-.profile-wrapper{
-position:relative;
-display:inline-block;
-}
-
-/* .profile-img{
-width: 1920px;
-height: 1080px;;
-object-fit:cover;
-border:2px solid white;
-} */
-
-.profile-img{
-width:35vw;
-max-width:150px;
-aspect: ratio 16px / 9px;
-object-fit:cover;
-border:2px solid white;
-}
-
-/* music button */
-
-.music-btn{
-position:absolute;
-top:50%;
-left:50%;
-transform:translate(-50%,-50%);
-width:50px;
-height:50px;
-border-radius:50%;
-border:none;
-background:rgba(0,0,0,0.55);
-color:white;
-cursor:pointer;
-display:flex;
-align-items:center;
-justify-content:center;
+.music-btn .center{
+  width:38px;
+  height:38px;
+  border-radius:50%;
+  background:rgba(0,0,0,.55);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#fff;
 }
 
 .music-btn i{
-font-size:18px;
+  font-size:18px;
 }
 
-/* links */
+    .song-title{ margin:6px 0 0; }
+    .artist{ margin-top:4px; opacity:.9; }
+    .track-name{ margin-top:4px; opacity:.9; }
 
-.links a{
-display:flex;
-align-items:center;
-justify-content:center;
-gap:10px;
-text-decoration:none;
-background:white;
-padding:15px;
-margin:3px 0;
-font-weight:bold;
-transition:0.25s;
-}
+    .dots{
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      gap:8px;
+      margin-top:10px;
+      min-height:14px;
+    }
 
-.links a.spotify{color:#1DB954;}
-.links a.apple{color:black;}
-.links a.ytmusic{color:#ff4e4e;}
-.links a.amazon{color:#00A8E1;}
-.links a.instagram{color:#E1306C;}
-.links a.youtube{color:#f25353;}
+    .dot{
+      width:8px;
+      height:8px;
+      border-radius:50%;
+      background:rgba(255,255,255,0.35);
+      transition:all .2s ease;
+      cursor:pointer;
+    }
 
-.links a:hover{
-transform:scale(1.03);
-}
+    .dot.active{
+      width:20px;
+      border-radius:10px;
+      background:white;
+    }
 
-.footer{
-margin-top:30px;
-font-size:12px;
-opacity:0.7;
-}
+    .links{ margin-top:14px; }
 
-</style>
+    .links a{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      text-decoration:none;
+      background:white;
+      padding:14px;
+      margin:6px 0;
+      font-weight:bold;
+      transition:.2s;
+      border-radius:8px;
+    }
+
+    .links a.spotify{color:#1DB954;}
+    .links a.apple{color:black;}
+    .links a.ytmusic{color:#ff4e4e;}
+    .links a.amazon{color:#00A8E1;}
+    .links a.youtube{color:#f25353;}
+    .links a:hover{ transform:scale(1.02); }
+
+    .follow{
+      margin-top:12px;
+      font-size:12px;
+      font-weight: bolder;
+    }
+
+    .social-bar{
+      margin-top:10px;
+      display:flex;
+      justify-content:center;
+      gap:14px;
+    }
+
+    .social-bar a{
+      width:42px;
+      height:42px;
+      border-radius:50%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-decoration:none;
+      color:white;
+      background:rgba(255,255,255,0.15);
+      border:1px solid rgba(255,255,255,0.25);
+      transition:.2s;
+      font-size:18px;
+    }
+
+    .social-bar a:hover{
+      transform:translateY(-2px) scale(1.05);
+      background:rgba(255,255,255,0.25);
+    }
+
+    .footer{
+      margin-top:auto;
+      padding-top:18px;
+      font-size:12px;
+      opacity:0.7;
+    }
+  </style>
 </head>
-
 <body>
+  <div class="bg" id="bg"></div>
+  <div class="overlay"></div>
 
-<div class="bg"></div>
-<div class="overlay"></div>
+  <audio id="bgmusic" loop></audio>
 
-<audio id="bgmusic" autoplay loop>
-<source src="Neend Final MASTER short_[cut_36sec].mp3" type="audio/mpeg">
-</audio>
+  <div class="container" id="swipeArea">
+    <div class="profile-wrapper">
+      <button id="musicToggle" class="music-btn">
+    <svg viewBox="0 0 60 60">
+        <circle class="track" cx="30" cy="30" r="26"></circle>
+        <circle id="progressRing"
+                class="progress"
+                cx="30"
+                cy="30"
+                r="21"></circle>
+    </svg>
 
-<div class="container">
-
-<div class="profile-wrapper">
-
-<button id="musicToggle" class="music-btn">
-<i class="fas fa-play"></i>
+    <div class="center">
+        <i class="fas fa-play"></i>
+    </div>
 </button>
+      <img id="coverImg" src="" class="profile-img" alt="cover" />
+    </div>
 
-<img src="Youtube.jpg.jpeg" class="profile-img">
+    <h2 class="song-title">Detained Engineer</h2>
+    <p class="artist">Artist</p>
+    <p class="track-name" id="trackText">Track</p>
 
-</div>
+    <div class="dots" id="dots"></div>
 
-<h2>Detained Engineer</h2>
+    <div class="links">
+      <a id="youtubeLink" class="youtube" target="_blank" rel="noopener"><i class="fab fa-youtube"></i> YouTube</a>
+      <a id="spotifyLink" class="spotify" target="_blank" rel="noopener"><i class="fab fa-spotify"></i> Spotify</a>
+      <a id="appleLink" class="apple" target="_blank" rel="noopener"><i class="fab fa-apple"></i> Apple Music</a>
+      <a id="ytmusicLink" class="ytmusic" target="_blank" rel="noopener"><i class="fas fa-music"></i> YouTube Music</a>
+      <a id="amazonLink" class="amazon" target="_blank" rel="noopener"><i class="fa-brands fa-amazon"></i> Amazon Music</a>
+    </div>
+ <!-- SOCIAL LINKS -->
+  <div class="social-links">
+    <div class="follow">Follow on:</div>
+    <div class="social-bar">
+      <a href="https://www.instagram.com/detained_engineer_/" target="_blank" rel="noopener" aria-label="Instagram">
+        <i class="fab fa-instagram"></i>
+      </a>
+      <a href="https://www.youtube.com/channel/UC9UQX1v_JLoy-ZwdDbUMDtQ" target="_blank" rel="noopener" aria-label="YouTube">
+        <i class="fab fa-youtube"></i>
+      </a>
+      <a href="https://open.spotify.com/user/nu3lsoxgt11dh6f97k2plkyl3" target="_blank" rel="noopener" aria-label="Spotify">
+        <i class="fab fa-spotify"></i>
+      </a>
+    </div>
+    </div>
 
-<p style="margin-top:-5px;">Artist</p>
-<p style="margin-top:-10px;">Neend - The Past</p>
+    <div class="footer">© Made with ❤️ by Niraj</div>
+  </div>
 
-<div class="links">
+  <script>
+    //Tracks - Copy existing till , and paste on top
 
-<a class="youtube" href="https://youtu.be/H4v_BOe_qNI?si=dFCWNcvPK2od4b6H">
-<i class="fab fa-youtube"></i> YouTube
-</a>
+const tracks = [
+  {
+    title: "Neend - The Past",
+    bg: "Neend.jpeg",
+    cover: "Neend.jpeg",
+    audio: "Neend.mp3",
+    links: {
+      youtube: "https://youtu.be/H4v_BOe_qNI?si=dFCWNcvPK2od4b6H",
+      spotify: "https://open.spotify.com/track/48DX6p1igmX2hAHqGM7Hf2?si=07c7d4abb1ee4402",
+      apple: "https://music.apple.com/us/song/neend/6781873532",
+      ytmusic: "https://music.youtube.com/watch?v=tRM9BQI-wxc&si=Zhrrlejrt59MsebC",
+      amazon: "https://music.amazon.in/albums/B0H5PZL6CF?marketplaceId=A21TJRUUN4KGV&musicTerritory=IN&ref=dm_sh_Hgx621SxMjOSKyDCjuFWvYEKY"
+    }
+  },
+  {
+    title: "Tum Hi Ho - The Past",
+    bg: "Tum Hi Ho.jpeg",
+    cover: "Tum Hi Ho.jpeg",
+    audio: "Tum Hi Ho.mp3",
+    links: {
+      youtube: "https://www.youtube.com/watch?v=x-fXPt2RxOY",
+      spotify: "https://open.spotify.com/album/5x03xjtWL0uP3lX0MR6EeK?si=NEMy77OhSli2hqMP1JLsNQ",
+      apple: "https://music.apple.com/us/album/tum-hi-ho-single/1880040348",
+      ytmusic: "https://www.youtube.com/watch?v=5Zhfmmbzv60",
+      amazon: "https://music.amazon.in/albums/B0GPLM3B46?marketplaceId=A21TJRUUN4KGV&musicTerritory=IN&ref=dm_sh_aWPNjHOWxI8wpb8VULhgvK8o3"
+    }
+  }
+];
 
-<a class="spotify" href="https://open.spotify.com/track/48DX6p1igmX2hAHqGM7Hf2?si=07c7d4abb1ee4402">
-<i class="fab fa-spotify"></i> Spotify
-</a>
-
-<a class="apple" href="https://music.apple.com/us/song/neend/6781873532">
-<i class="fab fa-apple"></i> Apple Music
-</a>
-
-<a class="ytmusic" href="https://music.youtube.com/watch?v=tRM9BQI-wxc&si=Zhrrlejrt59MsebC">
-<i class="fas fa-music"></i> YouTube Music
-</a>
-
-<a class="amazon" href="https://music.amazon.in/albums/B0H5PZL6CF?marketplaceId=A21TJRUUN4KGV&musicTerritory=IN&ref=dm_sh_Hgx621SxMjOSKyDCjuFWvYEKY">
-<i class="fa-brands fa-amazon"></i> Amazon Music
-</a>
-
-<a class="instagram" href="https://www.instagram.com/detained_engineer_/">
-<i class="fab fa-instagram"></i> Instagram
-</a>
-
-
-
-</div>
-
-<div class="footer">
-© Made with ❤️ by Niraj
-</div>
-
-</div>
-
-<script>
+let currentIndex = 0;
 
 const music = document.getElementById("bgmusic");
 const toggleBtn = document.getElementById("musicToggle");
 const icon = toggleBtn.querySelector("i");
 
-window.addEventListener("load", () => {
-music.volume = 0.5;
-music.play().then(()=>{
-icon.className="fas fa-pause";
-}).catch(()=>{});
-});
+const progressRing = document.getElementById("progressRing");
+const circumference = 2 * Math.PI * 26;
 
-toggleBtn.onclick = () => {
+progressRing.style.strokeDasharray = circumference;
+progressRing.style.strokeDashoffset = circumference;
 
-if(music.paused){
-music.play();
-icon.className="fas fa-pause";
-}else{
-music.pause();
-icon.className="fas fa-play";
-}
+const bg = document.getElementById("bg");
+const coverImg = document.getElementById("coverImg");
+const trackText = document.getElementById("trackText");
+const dotsWrap = document.getElementById("dots");
+const swipeArea = document.getElementById("swipeArea");
 
+const linkEls = {
+  youtube: document.getElementById("youtubeLink"),
+  spotify: document.getElementById("spotifyLink"),
+  apple: document.getElementById("appleLink"),
+  ytmusic: document.getElementById("ytmusicLink"),
+  amazon: document.getElementById("amazonLink")
 };
 
-</script>
+function renderDots() {
+  dotsWrap.innerHTML = "";
 
+  tracks.forEach((_, i) => {
+    const d = document.createElement("span");
+    d.className = "dot" + (i === currentIndex ? " active" : "");
+
+    d.addEventListener("click", () => {
+      currentIndex = i;
+      applyTrack(currentIndex, true);
+    });
+
+    dotsWrap.appendChild(d);
+  });
+}
+
+function updateDots() {
+  const dots = dotsWrap.querySelectorAll(".dot");
+  dots.forEach((dot, i) =>
+    dot.classList.toggle("active", i === currentIndex)
+  );
+}
+
+function applyTrack(index, autoPlay = true) {
+    const t = tracks[index];
+
+    // Update UI first
+    bg.style.backgroundImage = `url("${t.bg}")`;
+    coverImg.src = t.cover;
+    trackText.textContent = t.title;
+
+    Object.keys(linkEls).forEach(k => {
+        if (t.links[k]) {
+            linkEls[k].href = t.links[k];
+            linkEls[k].style.display = "flex";
+        } else {
+            linkEls[k].style.display = "none";
+        }
+    });
+
+    updateDots();
+
+    // Reset previous playback
+    music.pause();
+
+    music.src = t.audio;
+    music.volume = 0.5;
+    music.load();
+
+    if (autoPlay) {
+        music.onloadeddata = () => {
+        music.play()
+            .then(() => {
+                icon.className = "fas fa-pause";
+            })
+            .catch((err) => {
+                console.log("Play failed:", err);
+                icon.className = "fas fa-play";
+            });
+        };
+    } else {
+        icon.className = "fas fa-play";
+    }
+}
+
+function nextTrack() {
+  currentIndex = (currentIndex + 1) % tracks.length;
+  applyTrack(currentIndex, true);
+}
+
+function prevTrack() {
+  currentIndex = (currentIndex - 1 + tracks.length) % tracks.length;
+  applyTrack(currentIndex, true);
+}
+
+toggleBtn.onclick = () => {
+  if (music.paused) {
+    music.play().then(() => {
+      icon.className = "fas fa-pause";
+    });
+  } else {
+    music.pause();
+    icon.className = "fas fa-play";
+  }
+};
+
+// Swipe animation logic
+
+let touchStartX = 0;
+let currentX = 0;
+let deltaX = 0;
+let isDragging = false;
+
+const minSwipeDistance = 70;
+const maxDrag = 140;
+
+function setTranslateX(x) {
+  swipeArea.style.transform = `translateX(${x}px)`;
+}
+
+function animateBack() {
+  swipeArea.classList.remove("dragging");
+  swipeArea.classList.add("animating");
+
+  setTranslateX(0);
+
+  swipeArea.addEventListener("transitionend", () => {
+    swipeArea.classList.remove("animating");
+  }, { once: true });
+}
+
+function animateOutAndChange(direction) {
+  swipeArea.classList.remove("dragging");
+  swipeArea.classList.add("animating");
+
+  const outX = direction === -1 ? -window.innerWidth : window.innerWidth;
+
+  setTranslateX(outX);
+
+  swipeArea.addEventListener("transitionend", () => {
+
+    if (direction === -1)
+      nextTrack();
+    else
+      prevTrack();
+
+    swipeArea.classList.remove("animating");
+    swipeArea.classList.add("dragging");
+
+    setTranslateX(-outX);
+
+    void swipeArea.offsetWidth;
+
+    swipeArea.classList.remove("dragging");
+    swipeArea.classList.add("animating");
+
+    setTranslateX(0);
+
+    swipeArea.addEventListener("transitionend", () => {
+      swipeArea.classList.remove("animating");
+    }, { once: true });
+
+  }, { once: true });
+}
+
+swipeArea.addEventListener("touchstart", (e) => {
+  touchStartX = e.changedTouches[0].screenX;
+  currentX = touchStartX;
+  deltaX = 0;
+  isDragging = true;
+
+  swipeArea.classList.add("dragging");
+}, { passive: true });
+
+swipeArea.addEventListener("touchmove", (e) => {
+  if (!isDragging) return;
+
+  currentX = e.changedTouches[0].screenX;
+  deltaX = currentX - touchStartX;
+
+  const clamped = Math.max(-maxDrag, Math.min(maxDrag, deltaX));
+
+  setTranslateX(clamped);
+
+}, { passive: true });
+
+swipeArea.addEventListener("touchend", () => {
+
+  if (!isDragging) return;
+
+  isDragging = false;
+
+  if (Math.abs(deltaX) > minSwipeDistance) {
+
+    const direction = deltaX < 0 ? -1 : +1;
+    animateOutAndChange(direction);
+
+  } else {
+
+    animateBack();
+
+  }
+
+}, { passive: true });
+
+window.addEventListener("keydown", (e) => {
+  if (e.key === "ArrowLeft")
+    animateOutAndChange(+1);
+
+  if (e.key === "ArrowRight")
+    animateOutAndChange(-1);
+});
+
+renderDots();
+applyTrack(currentIndex, true);
+
+
+  </script>
+  <script>
+    function updateProgress() {
+    if (!music.duration) return;
+
+    const progress = music.currentTime / music.duration;
+    progressRing.style.strokeDashoffset =
+        circumference * (1 - progress);
+}
+music.addEventListener("timeupdate", updateProgress);
+
+music.addEventListener("loadedmetadata", () => {
+    progressRing.style.strokeDashoffset = circumference;
+});
+
+music.addEventListener("ended", () => {
+    progressRing.style.strokeDashoffset = circumference;
+});
+  </script>
+
+  <!-- Meta Pixel Code -->
+<script>
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window, document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', '1675244196919493');
+  fbq('track', 'PageView');
+  </script>
+  <noscript><img height="1" width="1" style="display:none"
+  src="https://www.facebook.com/tr?id=1675244196919493&ev=PageView&noscript=1"
+  /></noscript>
+  <!-- End Meta Pixel Code -->
+  
+  <!-- Meta Pixel Code -->
+  <script>
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window, document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', '1477825804100706');
+  fbq('track', 'PageView');
+  </script>
+  <noscript><img height="1" width="1" style="display:none"
+  src="https://www.facebook.com/tr?id=1477825804100706&ev=PageView&noscript=1"
+  /></noscript>
+  <!-- End Meta Pixel Code -->
+  
 </body>
-
-
-<!-- Meta Pixel Code -->
-<script>
-!function(f,b,e,v,n,t,s)
-{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-n.queue=[];t=b.createElement(e);t.async=!0;
-t.src=v;s=b.getElementsByTagName(e)[0];
-s.parentNode.insertBefore(t,s)}(window, document,'script',
-'https://connect.facebook.net/en_US/fbevents.js');
-fbq('init', '1675244196919493');
-fbq('track', 'PageView');
-</script>
-<noscript><img height="1" width="1" style="display:none"
-src="https://www.facebook.com/tr?id=1675244196919493&ev=PageView&noscript=1"
-/></noscript>
-<!-- End Meta Pixel Code -->
-
-<!-- Meta Pixel Code -->
-<script>
-!function(f,b,e,v,n,t,s)
-{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-n.queue=[];t=b.createElement(e);t.async=!0;
-t.src=v;s=b.getElementsByTagName(e)[0];
-s.parentNode.insertBefore(t,s)}(window, document,'script',
-'https://connect.facebook.net/en_US/fbevents.js');
-fbq('init', '1477825804100706');
-fbq('track', 'PageView');
-</script>
-<noscript><img height="1" width="1" style="display:none"
-src="https://www.facebook.com/tr?id=1477825804100706&ev=PageView&noscript=1"
-/></noscript>
-<!-- End Meta Pixel Code -->
 </html>
