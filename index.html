@@ -279,7 +279,8 @@
       <a href="https://www.youtube.com/channel/UC9UQX1v_JLoy-ZwdDbUMDtQ" target="_blank" rel="noopener" aria-label="YouTube">
         <i class="fab fa-youtube"></i>
       </a>
-      <a href="https://open.spotify.com/user/nu3lsoxgt11dh6f97k2plkyl3" target="_blank" rel="noopener" aria-label="Spotify">
+      <a id="spotifyProfileLink"
+   href="https://open.spotify.com/user/nu3lsoxgt11dh6f97k2plkyl3" target="_blank" rel="noopener" aria-label="Spotify">
         <i class="fab fa-spotify"></i>
       </a>
     </div>
@@ -563,8 +564,62 @@ music.addEventListener("ended", () => {
 });
   </script>
 
+
+
+
+
+
+
   <!-- Meta Pixel Code -->
 <script>
+
+/* ==========================================
+   META TRACKING
+========================================== */
+
+function trackSpotifyClick(linkType) {
+
+    fbq('trackCustom', 'SpotifyClick', {
+        song: tracks[currentIndex].title,
+        linkType: linkType
+    });
+
+}
+
+document
+.getElementById("spotifyLink")
+.addEventListener("click", function () {
+
+    trackSpotifyClick("Song");
+
+});
+
+document
+.getElementById("spotifyProfileLink")
+.addEventListener("click", function () {
+
+    trackSpotifyClick("ArtistProfile");
+
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ==========================================
+   META TRACKING
+========================================== */
+
+
+
   !function(f,b,e,v,n,t,s)
   {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
   n.callMethod.apply(n,arguments):n.queue.push(arguments)};
@@ -579,6 +634,12 @@ music.addEventListener("ended", () => {
   <noscript><img height="1" width="1" style="display:none"
   src="https://www.facebook.com/tr?id=1675244196919493&ev=PageView&noscript=1"
   /></noscript>
+
+
+
+
+
+  
   <!-- End Meta Pixel Code -->
   
 
